@@ -372,10 +372,10 @@ namespace Match3
             }
             int bounce = 0;
             bounce += (result.MatchLength - 2);
-            LevelNumber _levelNumber=_level as LevelNumber;
-            _levelNumber._movesUsed -= bounce;
+            //LevelNumber _levelNumber=_level as LevelNumber;
+            //_levelNumber._movesUsed -= bounce;
             //Debug.Log("_level.numMoves=" + _level.numMoves + "_levelNumber._movesUsed" + _levelNumber._movesUsed);
-            _hud.SetRemaining(_level.numMoves - _levelNumber._movesUsed);
+            //_hud.SetRemaining(_level.numMoves - _levelNumber._movesUsed);
             // 等待特效完成
             yield return new WaitForSeconds(0.5f);
 

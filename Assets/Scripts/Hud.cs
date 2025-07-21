@@ -59,14 +59,13 @@ namespace Match3
             {
                 visibleStar = 3;
             }
-
             for (int i = 0; i < stars.Length; i++)
             {
-                if (i <= visibleStar)
+                if (i <= visibleStar-1)
                 {
                     stars[i].enabled = true;
                 }
-                if (i > visibleStar)
+                if (i > visibleStar-1)
                 {
                     stars[i].enabled = false;
                 }

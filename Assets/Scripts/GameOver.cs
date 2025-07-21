@@ -38,7 +38,7 @@ namespace Match3
 
         public void ShowWin(int score, int starCount)
         {
-            Debug.Log("ShouldShowWin");
+            //Debug.Log("ShouldShowWin");
             screenParent.SetActive(true);
             loseText.enabled = false;
 
@@ -57,22 +57,19 @@ namespace Match3
 
         private IEnumerator ShowWinCoroutine(int starCount)
         {
+            //Debug.Log($"Star Count: {starCount}");
             yield return new WaitForSeconds(0.5f);
 
-            if (starCount < stars.Length)
-            {
-                for (int i = 0; i <= starCount; i++)
+
+                for (int i = 0; i < starCount; i++)
                 {
                     stars[i].enabled = true;
 
-                    if (i > 0)
-                    {
-                        stars[i - 1].enabled = false;
-                    }
 
-                    yield return new WaitForSeconds(0.5f);
+
+                    yield return new WaitForSeconds(0.2f);
                 }
-            }
+            
 
             scoreText.enabled = true;
         }

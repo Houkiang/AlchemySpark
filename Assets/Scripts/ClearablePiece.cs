@@ -18,7 +18,7 @@ namespace Match3
 
         public virtual void Clear()
         {
-            piece.GameGridRef.level.OnPieceCleared(piece);
+            //piece.GameGridRef.level.OnPieceCleared(piece);
             IsBeingCleared = true;
             StartCoroutine(ClearCoroutine());
         }

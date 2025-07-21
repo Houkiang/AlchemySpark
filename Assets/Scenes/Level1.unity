@@ -122,90 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &69425951
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 69425955}
-  - component: {fileID: 69425952}
-  m_Layer: 0
-  m_Name: Level
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &69425952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69425951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aded86531c022ab4d92a14c9059cf1f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numMoves: 10
-  herbClearThresholds:
-  - color: 0
-    count: 999
-  - color: 1
-    count: 999
-  - color: 2
-    count: 999
-  - color: 3
-    count: 999
-  - color: 4
-    count: 999
-  requiredHerbCounts:
-  - color: 0
-    count: 1
-  gameGrid: {fileID: 425222016}
-  hud: {fileID: 2139536130}
-  score1Star: 50000
-  score2Star: 100000
-  score3Star: 150000
-  scoreTiers:
-  - scoreThreshold: 5000
-    animationClip: {fileID: 0}
-    audioClip: {fileID: 8300000, guid: a46bf193d2e8e524eafea7b77898d5d9, type: 3}
-  - scoreThreshold: 10000
-    animationClip: {fileID: 0}
-    audioClip: {fileID: 8300000, guid: 20fce57a812e1144fabb7be0523b1cb2, type: 3}
-  - scoreThreshold: 20000
-    animationClip: {fileID: 0}
-    audioClip: {fileID: 8300000, guid: 1ab8fff50606ec644a6087e32f009369, type: 3}
-  audioVolume: 1
-  effectSortingLayer: Default
-  effectSortingOrder: 10
-  targetScore: 100000
-  obstaclePieceTypes: 0700000008000000
-  _movesUsed: 0
-  choose: 2
-  baseHerbCountNeed:
-  - color: 0
-    count: 10
---- !u!4 &69425955
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69425951}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3987228, y: -1.1151351, z: -0.043722823}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &75250106
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,8 +819,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xDim: 6
   yDim: 6
-  fillTime: 0.08
-  level: {fileID: 69425952}
+  fillTime: 0.2
+  level: {fileID: 1145417453}
   piecePrefabs:
   - type: 0
     prefab: {fileID: 1434227050409322, guid: 5f9aabd77bd482f4eaffc234b341744a, type: 3}
@@ -1263,7 +1179,10 @@ MonoBehaviour:
   scoreParent: {fileID: 675291760}
   loseText: {fileID: 1983620578}
   scoreText: {fileID: 1301570451}
-  stars: []
+  stars:
+  - {fileID: 1722535427}
+  - {fileID: 2097037646}
+  - {fileID: 75250108}
 --- !u!1 &531560576
 GameObject:
   m_ObjectHideFlags: 0
@@ -3018,6 +2937,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1131537912}
   m_CullTransparentMesh: 1
+--- !u!1 &1145417450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1145417452}
+  - component: {fileID: 1145417453}
+  m_Layer: 0
+  m_Name: Level
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1145417452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145417450}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.62862, y: -3.271736, z: 0.24795789}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1145417453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145417450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869f50f90dfcf754b843e2e8cc0bb66f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid: {fileID: 425222016}
+  hud: {fileID: 2139536130}
+  score1Star: 10000
+  score2Star: 20000
+  score3Star: 30000
+  numMoves: 10
+  requiredHerbCounts:
+    color: 0
+    count: 10
 --- !u!1 &1150200999
 GameObject:
   m_ObjectHideFlags: 0
@@ -6317,7 +6289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ca460e3028641644ad72649a81c8bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _level: {fileID: 69425952}
+  _level: {fileID: 0}
   _hud: {fileID: 2139536130}
   boomEffectPrefab: {fileID: 6083552932809757792, guid: 76798cb5182629d42aa8233bb6aed568,
     type: 3}
@@ -6455,7 +6427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3996169cac6578944ad7416c86e58378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: {fileID: 69425952}
+  level: {fileID: 1145417453}
   gameOver: {fileID: 517597959}
   _gamegrid: {fileID: 425222016}
   remainingText: {fileID: 1128426866}
@@ -6479,8 +6451,8 @@ SceneRoots:
   - {fileID: 1780855505}
   - {fileID: 425222017}
   - {fileID: 2139536129}
-  - {fileID: 69425955}
   - {fileID: 815929702}
   - {fileID: 1632846159}
   - {fileID: 994485510}
   - {fileID: 2136195873}
+  - {fileID: 1145417452}
