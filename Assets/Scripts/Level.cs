@@ -44,6 +44,10 @@ namespace Match3
             currentScore += piece.score;
             hud.SetScore(currentScore);
         }
+        public virtual void OnExtractCleared(ColorType color)
+        {
+            // Override in derived classes if needed
+        }
 
         public virtual void JudgeWin()
         {

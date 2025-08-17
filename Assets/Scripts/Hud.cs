@@ -13,18 +13,27 @@ namespace Match3
         public Level level;
         public GameOver gameOver;
         public GameGrid _gamegrid;
-
-        public Text remainingText;
-        public Text targetText;
+        [System.Serializable]
+        public struct ExtractToNext//for extract level
+        {
+            public ColorType color;
+            public Text count;
+            public void SetCount(int value) => count.text = value.ToString();
+        }
+        public Text targetExtractText;//for extract level
+        public Text remainingText;//moves
+        public Text targetText;//for herb level
         public Text targetSubtext;
         public Text scoreText;
-        public Text temp;
 
+        public List<ExtractToNext> extractToNext = new List<ExtractToNext>();
+ 
         public Image[] stars;
-        public List<Text> herb = new List<Text> ();
-        public List<Text> potion = new List<Text> ();
+    
+        // public List<Text> herb = new List<Text>();
+        // public List<Text> potion = new List<Text>();
 
-        public Text herbToNext;
+
         
 
         private int _starIndex = 0;
@@ -81,30 +90,31 @@ namespace Match3
 
         public void SetRemaining(int remaining) => remainingText.text = remaining.ToString();
 
-        public void SetRemaining(string remaining) => remainingText.text = remaining;
-        public void SetHerbToNext(string _string) => herbToNext.text = _string;
+        public void SetTargetExtract(int target) => targetExtractText.text = target.ToString();
 
-        public void SetRemainingherb(List<ColorClearCount> remain)
-        {
-            int len = remain.Count;
-            Debug.Log("##############长度是" + len);
-            //Debug.Log("Len=" + len);
-            for (int i = 0; i < len; i++)
-            {
-                herb[0].text = remain[i].count.ToString();
-                Debug.Log("temp.text" + herb[0].text);
 
-            }
-        }
-        public void SetRemainingpotion(List<ColorClearCount> remain)
-        {
-            int len = remain.Count;
-            for (int i = 0; i < len; i++)
-            {
-                potion[0].text = remain[i].count.ToString();
+
+        // public void SetRemainingherb(List<ColorClearCount> remain)
+        // {
+        //     int len = remain.Count;
+        //     Debug.Log("##############长度是" + len);
+        //     //Debug.Log("Len=" + len);
+        //     for (int i = 0; i < len; i++)
+        //     {
+        //         herb[0].text = remain[i].count.ToString();
+        //         Debug.Log("temp.text" + herb[0].text);
+
+        //     }
+        // }
+        // public void SetRemainingpotion(List<ColorClearCount> remain)
+        // {
+        //     int len = remain.Count;
+        //     for (int i = 0; i < len; i++)
+        //     {
+        //         potion[0].text = remain[i].count.ToString();
         
-            }
-        }
+        //     }
+        // }
 
 
         public void OnGameWin(int score)

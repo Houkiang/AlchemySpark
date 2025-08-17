@@ -274,10 +274,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 425222016}
   hud: {fileID: 2139536130}
-  score1Star: 0
-  score2Star: 0
-  score3Star: 0
-  numMoves: 0
+  score1Star: 20000
+  score2Star: 40000
+  score3Star: 80000
+  numMoves: 20
   movesUsed: 0
   herbToExtractThresholds:
   - color: 0
@@ -289,10 +289,10 @@ MonoBehaviour:
   - color: 3
     count: 9999
   - color: 4
-    count: 9999
+    count: 10
   requiredExtractCounts:
-    color: 0
-    count: 0
+    color: 4
+    count: 3
   currentRequiredExtractCount: 0
   obstaclePieceTypesForFault: 0700000008000000
 --- !u!1 &75250106
@@ -515,7 +515,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\xD73"
+  m_Text: 3
 --- !u!222 &306172485
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1048,7 +1048,7 @@ MonoBehaviour:
       AlchemyType: 0
   specialBackgroundPrefab: {fileID: 3340003966345329086, guid: 9a9578e2501cc9d478da85d576ffff9c,
     type: 3}
-  minY: 2
+  minYForPotion: 2
   clearedHerbCounts:
   - color: 1
     count: 0
@@ -1386,7 +1386,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &531560577
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2653,7 +2653,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u540C\u8272\u836F\u8349\u53EF\u5408\u6210\u5143\u7D20\u7CBE\u534E\uFF0C\u5C06\u5143\u7D20\u7CBE\u534E\u9001\u5165\u4E0B\u65B9\u70BC\u836F\u9505\u5373\u53EF\u3002\r\n\u4E07\u6076\u7684\u7EC8\u7ED3\u65CF\u5165\u4FB5\u4E86\u6211\u4EEC\u4F1F\u5927\u7684\u738B\u56FD\uFF0C\u6211\u4EEC\u6025\u9700\u540E\u65B9\u70BC\u91D1\u672F\u58EB\u7684\u652F\u63F4\r\n\u8BF7\u52A0\u5FEB\u70BC\u91D1\u7684\u8FDB\u5EA6\r\nFor
+  m_Text: "\u4E07\u6076\u7684\u7EC8\u7ED3\u65CF\u5165\u4FB5\u4E86\u6211\u4EEC\u4F1F\u5927\u7684\u738B\u56FD\uFF0C\u6211\u4EEC\u6025\u9700\u540E\u65B9\u70BC\u91D1\u672F\u58EB\u7684\u652F\u63F4\uFF0C\u5408\u6210\u66F4\u9AD8\u7EA7\u7684\u5143\u7D20\u7CBE\u534E\u5427\uFF01\n\u6D88\u8017\u4E00\u5B9A\u6570\u91CF\u7684\u540C\u8272\u836F\u8349\u53EF\u751F\u6210\u5BF9\u5E94\u5143\u7D20\u7CBE\u534E\uFF0C\u5C06\u5143\u7D20\u7CBE\u534E\u9001\u5165\u6E38\u620F\u68CB\u76D8\u4E0B\u4E24\u6392\u5373\u4E3A\u8FDB\u5165\u70BC\u836F\u9505\u3002\r\n\u8BF7\u52A0\u5FEB\u70BC\u91D1\u7684\u8FDB\u5EA6\r\nFor
     Super Stormveil  !!!\r\n"
 --- !u!222 &925704273
 CanvasRenderer:
@@ -2915,7 +2915,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 944, y: 270}
+  m_AnchoredPosition: {x: 934, y: 270}
   m_SizeDelta: {x: 619.664, y: 368.664}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1083571274
@@ -2925,7 +2925,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1083571272}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
@@ -2951,7 +2951,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 333
+  m_Text: "\xD7"
 --- !u!222 &1083571275
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5729,7 +5729,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: =
+  m_Text: "\u2190"
 --- !u!222 &1861147755
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6384,7 +6384,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 70, y: 381}
-  m_SizeDelta: {x: 1848.0323, y: 451.5906}
+  m_SizeDelta: {x: 1848.032, y: 451.591}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2099104502
 MonoBehaviour:
@@ -6653,20 +6653,18 @@ MonoBehaviour:
   level: {fileID: 69425956}
   gameOver: {fileID: 517597959}
   _gamegrid: {fileID: 425222016}
+  targetExtractText: {fileID: 306172484}
   remainingText: {fileID: 1128426866}
   targetText: {fileID: 1083571274}
   targetSubtext: {fileID: 1861147754}
   scoreText: {fileID: 1362469998}
-  temp: {fileID: 1880804939}
+  extractToNext:
+  - color: 4
+    count: {fileID: 1589595332}
   stars:
   - {fileID: 1522114774}
   - {fileID: 1396524644}
   - {fileID: 2039921676}
-  herb:
-  - {fileID: 1083571274}
-  potion:
-  - {fileID: 1083571274}
-  herbToNext: {fileID: 1589595332}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

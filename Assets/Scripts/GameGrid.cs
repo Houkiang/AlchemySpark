@@ -332,7 +332,7 @@ namespace Match3
 
         private IEnumerator HandleFillingState()
         {
-            //CheckBottomPotions();
+            CheckBottomPotions();
             //Debug.Log("Fill即将进行");
             yield return StartCoroutine(Fill());
            // Debug.Log("fill未实现");
@@ -344,7 +344,7 @@ namespace Match3
             {
                 _currentState = GameState.AlchemyClearing;
             }
-            else if (CheckBluePotionSwaps() || CheckGreenPotionConversions() )//|| CheckBottomPotions())
+            else if (CheckBluePotionSwaps() || CheckGreenPotionConversions() || CheckBottomPotions())
             {
                 _currentState = GameState.Filling;
             }
@@ -740,51 +740,50 @@ namespace Match3
                         }
                         doGenerate = true;
                     }
+                    //传入level和hud的参数为修正后的
+                    var clearedHerbFixed = clearedHerbCounts.Find(c => c.color == matchColor);
+                    levelExtract.OnHerbToExtract(matchColor, clearedHerbFixed.count);
                 }
             }
             return doGenerate;
         }
 
-        // private bool CheckBottomPotions()
-        // {
-        //     bool modified = false;
-        //     LevelExtract levelExtract = level as LevelExtract;
-        //     if (levelExtract == null ) return false;
+        private bool CheckBottomPotions()
+        {
+            bool modified = false;
+            LevelExtract levelExtract = level as LevelExtract;
+            if (levelExtract == null ) return false;
 
-        //     for (int x = 0; x < xDim; x++)
-        //     {
-        //         for (int y = yDim - minYForPotion; y < yDim; y++)
-        //         {
-        //             GamePiece piece = _pieces[x, y];
-        //             if (piece == null || piece.Type != PieceType.SpecialElement || !piece.IsColored()) continue;
+            for (int x = 0; x < xDim; x++)
+            {
+                for (int y = yDim - minYForPotion; y < yDim; y++)
+                {
+                    GamePiece piece = _pieces[x, y];
+                    if (piece == null || piece.Type != PieceType.SpecialElement || !piece.IsColored()) continue;
 
-        //             ColorType color = piece.ColorComponent.Color;
-        //             var requiredHerb = levelNumber.requiredHerbCounts.Find(r => r.color == color);
-        //             bool isRequiredColor = requiredHerb.color == color;
+                    ColorType color = piece.ColorComponent.Color;
+                    var requiredHerb = levelExtract.requiredExtractCounts;
+                    bool isRequiredColor = requiredHerb.color == color;
 
-        //             if (!levelNumber.CheckAllCleared())
-        //             {
-        //                 if (!isRequiredColor)
-        //                 {
-        //                     Destroy(piece.gameObject);
-        //                     GenerateObstacle(x, y);
-        //                     modified = true;
-        //                 }
-        //                 else
-        //                 {
-        //                     ClearPiece(x, y);
-        //                     modified = true;
-        //                 }
-        //             }
-        //             else if (isRequiredColor)
-        //             {
-        //                 ClearPiece(x, y);
-        //                 modified = true;
-        //             }
-        //         }
-        //     }
-        //     return modified;
-        // }
+
+                        if (!isRequiredColor)
+                        {
+                            Destroy(piece.gameObject);
+                            GenerateObstacle(x, y);
+                            modified = true;
+                        }
+                        else
+                        {
+                            ClearPiece(x, y);
+                            modified = true;
+                            levelExtract.OnExtractCleared(color);
+                        }
+                   //待补充level统计
+                    
+                }
+            }
+            return modified;
+        }
 
         private void GenerateObstacle(int startX, int startY)
         {
@@ -1096,6 +1095,7 @@ namespace Match3
                 IncrementCollectedExtractCount(piece.ColorComponent.Color);
             else if (piece.IsColored())
                 IncrementClearedHerbCount(piece.ColorComponent.Color);
+                
             ClearObstacles(x, y);
 
             bool didSpecialGenerate = false;
