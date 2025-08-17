@@ -11,6 +11,7 @@ namespace Match3
     {
 
         protected LevelType type;
+        public LevelType LevelType => type;
 
         public GameGrid grid;
         public Hud hud;
@@ -19,6 +20,7 @@ namespace Match3
         public int score3Star;
         public int numMoves;
         protected int currentScore=0;
+        public int movesUsed = 0;
         public virtual void GameWin()
         {
             Debug.Log("Game Won!");
@@ -34,7 +36,8 @@ namespace Match3
 
         public virtual void OnMove()
         {
-
+            movesUsed++;
+            hud.SetRemaining(numMoves - movesUsed);
         }
         public virtual void OnPieceCleared(GamePiece piece)
         {

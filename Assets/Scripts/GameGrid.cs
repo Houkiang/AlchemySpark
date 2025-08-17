@@ -48,9 +48,9 @@ namespace Match3
         [SerializeField] private SpecialBackground[] specialBackgrounds;
         [SerializeField] private GameObject specialBackgroundPrefab;
 
-        [SerializeField] private int minY = 2;
+        [SerializeField] private int minYForPotion = 2;
         public List<ColorClearCount> clearedHerbCounts = new List<ColorClearCount>();
-        public List<ColorClearCount> collectedHerbCounts = new List<ColorClearCount>();
+        public List<ColorClearCount> collectedExtractCounts = new List<ColorClearCount>();
         [SerializeField] private int obstacleWidth = 2;
         [SerializeField] private int obstacleHeight = 2;
 
@@ -182,16 +182,16 @@ namespace Match3
             }
         }
 
-        private void IncrementCollectedHerbCount(ColorType color)
+        private void IncrementCollectedExtractCount(ColorType color)
         {
             if (color == ColorType.Any) return;
-            for (int i = 0; i < collectedHerbCounts.Count; i++)
+            for (int i = 0; i < collectedExtractCounts.Count; i++)
             {
-                ColorClearCount count = collectedHerbCounts[i];
+                ColorClearCount count = collectedExtractCounts[i];
                 if (count.color == color)
                 {
                     count.count++;
-                    collectedHerbCounts[i] = count;
+                    collectedExtractCounts[i] = count;
                     break;
                 }
             }
@@ -408,7 +408,7 @@ namespace Match3
         private bool CheckGreenPotionConversions()
         {
             bool modified = false;
-            for (int y = 0; y <= yDim - minY - 1; y++)
+            for (int y = 0; y <= yDim - minYForPotion - 1; y++)
             {
                 for (int x = 0; x < xDim; x++)
                 {
@@ -419,7 +419,7 @@ namespace Match3
 
                     piece.ResetGreenMoveCount();
                     List<GamePiece> validPieces = new List<GamePiece>();
-                    for (int ty = 0; ty <= yDim - minY - 1; ty++)
+                    for (int ty = 0; ty <= yDim - minYForPotion - 1; ty++)
                     {
                         for (int tx = 0; tx < xDim; tx++)
                         {
@@ -671,7 +671,7 @@ namespace Match3
                         }
                     }
 
-                    //CheckAndGenerateSpecialElement(match);
+                    
 
                 }
             }
@@ -703,54 +703,57 @@ namespace Match3
         }
 
 
-        // private void CheckAndGenerateSpecialElement(List<GamePiece> match)
-        // {
-        //     GamePiece firstPiece = match[0];
-        //     int specialX = firstPiece.X;
-        //     int specialY = firstPiece.Y;
-        //     ColorType matchColor = firstPiece.IsColored() ? firstPiece.ColorComponent.Color : ColorType.Any;
+        private bool CheckAndGenerateSpecialElement(GamePiece piece)
+        {
+            bool doGenerate = false;
+            GamePiece firstPiece = piece;
+            int specialX = firstPiece.X;
+            int specialY = firstPiece.Y;
+            ColorType matchColor = firstPiece.IsColored() ? firstPiece.ColorComponent.Color : ColorType.Any;
 
-        //     LevelNumber levelNumber = level as LevelNumber;
-        //     if (levelNumber != null && levelNumber.herbClearThresholds != null)
-        //     {
-        //         var herbThreshold = levelNumber.herbClearThresholds.Find(h => h.color == matchColor);
-        //         if (herbThreshold.color == matchColor)
-        //         {
-        //             var clearedHerb = clearedHerbCounts.Find(c => c.color == matchColor);
-        //             if (clearedHerb.count >= herbThreshold.count)
-        //             {
-        //                 Destroy(_pieces[specialX, specialY].gameObject);
-        //                 GamePiece newPiece = SpawnNewPiece(specialX, specialY, PieceType.SpecialElement);
-        //                 if (newPiece.IsColored())
-        //                 {
-        //                     newPiece.ColorComponent.SetColor(matchColor);
-        //                     if (matchColor == ColorType.White && GenerateWhitePotionObstacles(specialX, specialY))
-        //                         StartCoroutine(Fill());
-        //                 }
-        //                 for (int i = 0; i < clearedHerbCounts.Count; i++)
-        //                 {
-        //                     var herbCount = clearedHerbCounts[i];
-        //                     if (herbCount.color == matchColor)
-        //                     {
-        //                         herbCount.count = 0;
-        //                         clearedHerbCounts[i] = herbCount;
-        //                         break;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+            LevelExtract levelExtract = level as LevelExtract;
+            if (levelExtract != null && levelExtract.herbToExtractThresholds != null)
+            {
+                var herbThreshold = levelExtract.herbToExtractThresholds.Find(h => h.color == matchColor);
+                if (herbThreshold.color == matchColor)
+                {
+                    var clearedHerb = clearedHerbCounts.Find(c => c.color == matchColor);
+                    if (clearedHerb.count >= herbThreshold.count)
+                    {
+                        Destroy(_pieces[specialX, specialY].gameObject);
+                        GamePiece newPiece = SpawnNewPiece(specialX, specialY, PieceType.SpecialElement);
+                        if (newPiece.IsColored())
+                        {
+                            newPiece.ColorComponent.SetColor(matchColor);
+                            if (matchColor == ColorType.White) GenerateWhitePotionObstacles(specialX, specialY);
+                            //StartCoroutine(Fill());
+                        }
+                        for (int i = 0; i < clearedHerbCounts.Count; i++)
+                        {
+                            var herbCount = clearedHerbCounts[i];
+                            if (herbCount.color == matchColor)
+                            {
+                                herbCount.count = 0;
+                                clearedHerbCounts[i] = herbCount;
+                                break;
+                            }
+                        }
+                        doGenerate = true;
+                    }
+                }
+            }
+            return doGenerate;
+        }
 
         // private bool CheckBottomPotions()
         // {
         //     bool modified = false;
-        //     LevelNumber levelNumber = level as LevelNumber;
-        //     if (levelNumber == null || levelNumber.requiredHerbCounts == null) return false;
+        //     LevelExtract levelExtract = level as LevelExtract;
+        //     if (levelExtract == null ) return false;
 
         //     for (int x = 0; x < xDim; x++)
         //     {
-        //         for (int y = yDim - minY; y < yDim; y++)
+        //         for (int y = yDim - minYForPotion; y < yDim; y++)
         //         {
         //             GamePiece piece = _pieces[x, y];
         //             if (piece == null || piece.Type != PieceType.SpecialElement || !piece.IsColored()) continue;
@@ -783,26 +786,26 @@ namespace Match3
         //     return modified;
         // }
 
-        // private void GenerateObstacle(int startX, int startY)
-        // {
-        //     LevelNumber levelNumber = level as LevelNumber;
-        //     if (levelNumber == null || levelNumber.obstaclePieceTypes.Count == 0) return;
+        private void GenerateObstacle(int startX, int startY)
+        {
+            LevelExtract levelExtract = level as LevelExtract;
+            if (levelExtract == null || levelExtract.obstaclePieceTypesForFault.Count == 0) return;
 
-        //     PieceType selectedType = levelNumber.obstaclePieceTypes[UnityEngine.Random.Range(0, levelNumber.obstaclePieceTypes.Count)];
-        //     for (int dx = 0; dx < obstacleWidth; dx++)
-        //     {
-        //         for (int dy = 0; dy < obstacleHeight; dy++)
-        //         {
-        //             int x = startX + dx;
-        //             int y = startY + dy;
-        //             if (x >= 0 && x < xDim && y >= 0 && y < yDim)
-        //             {
-        //                 Destroy(_pieces[x, y].gameObject);
-        //                 SpawnNewPiece(x, y, selectedType);
-        //             }
-        //         }
-        //     }
-        // }
+            PieceType selectedType = levelExtract.obstaclePieceTypesForFault[UnityEngine.Random.Range(0, levelExtract.obstaclePieceTypesForFault.Count)];
+            for (int dx = 0; dx < obstacleWidth; dx++)
+            {
+                for (int dy = 0; dy < obstacleHeight; dy++)
+                {
+                    int x = startX + dx;
+                    int y = startY + dy;
+                    if (x >= 0 && x < xDim && y >= 0 && y < yDim)
+                    {
+                        Destroy(_pieces[x, y].gameObject);
+                        SpawnNewPiece(x, y, selectedType);
+                    }
+                }
+            }
+        }
 
         private List<GamePiece> GetMatch(GamePiece piece, int newX, int newY)
         {
@@ -1090,16 +1093,24 @@ namespace Match3
 
             GamePiece piece = _pieces[x, y];
             if (piece.Type == PieceType.SpecialElement && piece.IsColored())
-                IncrementCollectedHerbCount(piece.ColorComponent.Color);
+                IncrementCollectedExtractCount(piece.ColorComponent.Color);
             else if (piece.IsColored())
                 IncrementClearedHerbCount(piece.ColorComponent.Color);
-
-            piece.ClearableComponent.Clear();
-            level.OnPieceCleared(piece);
-            SpawnNewPiece(x, y, PieceType.Empty);
             ClearObstacles(x, y);
-            //LevelNumber levelNumber = level as LevelNumber;
-           //levelNumber.SetHubHerbToNext(piece);
+
+            bool didSpecialGenerate = false;
+            if (level.LevelType == LevelType.Extract)
+            {
+                didSpecialGenerate = CheckAndGenerateSpecialElement(piece);
+            }
+            if (!didSpecialGenerate)
+            {
+                piece.ClearableComponent.Clear();
+                SpawnNewPiece(x, y, PieceType.Empty);
+            }
+            
+
+            level.OnPieceCleared(piece);
             return true;
         }
 

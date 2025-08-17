@@ -7,7 +7,7 @@ namespace Match3
     public class LevelHerbs : Level
     {
 
-        private int movesUsed = 0;
+        
 
         public ColorClearCount requiredHerbCounts; // Required herb counts for winning the level
         public int currentRequiredHerbCount = 0; // Current count of the required herb
@@ -30,8 +30,7 @@ namespace Match3
         public override void OnMove()
         {
             base.OnMove();
-            movesUsed++;
-            hud.SetRemaining(numMoves - movesUsed);
+
 
         }
         public override void JudgeWin()

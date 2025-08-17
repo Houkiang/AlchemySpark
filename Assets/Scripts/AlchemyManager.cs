@@ -34,17 +34,15 @@ namespace Match3
         [Header("基础得分药水加成")]
         public int basicScoreBounce;
 
-        private Vector3 _queueStartPosition = new Vector3(-5f, -8f, 0); // 棋盘外起始位置
-        private float _elixirSpacing = 1.2f; // 药水间距
-        private bool _isProcessingElixir = false; // 是否正在处理药水消失
+
 
         private int boomEffectType=0;
 
 
         // 药水相关变量
         private Queue<GameObject> _elixirQueue = new Queue<GameObject>();
-        private Vector3 _screenBottomCenter = new Vector3(0, -8f, 0); // 屏幕底部中央位置
-        private Vector3 _offScreenPosition = new Vector3(0, -15f, 0); // 屏幕外位置
+        private Vector3 _screenBottomCenter = new Vector3(0, 4.7f, 0); // 屏幕底部中央位置
+        private Vector3 _offScreenPosition = new Vector3(0, 15f, 0); // 屏幕外位置
 
         // 在EnqueueEffect中调用此方法来生成药水
 
@@ -101,17 +99,22 @@ namespace Match3
             Vector3 startPos = spawnPosition;
             Vector3 targetPos = new Vector3(spawnPosition.x, _offScreenPosition.y, spawnPosition.z);
 
+            //加入队列
+            _elixirQueue.Enqueue(elixir);
+            //Debug.Log($"药水加入队列，当前数量: {_elixirQueue.Count}");
             while (elapsed < duration)
             {
+                if (elixir == null)
+                {
+                    yield break; // 如果药水被销毁，退出协程
+                }
                 elapsed += Time.deltaTime;
                 float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
                 elixir.transform.position = Vector3.Lerp(startPos, targetPos, t);
                 yield return null;
             }
 
-            // 移动完成后加入队列
-            _elixirQueue.Enqueue(elixir);
-           // Debug.Log($"药水加入队列，当前数量: {_elixirQueue.Count}");
+       
         }
 
         // 消耗药水
@@ -119,10 +122,10 @@ namespace Match3
         {
             if (_elixirQueue.Count == 0)
             {
-                //Debug.LogWarning("没有可消耗的药水");
+                Debug.LogWarning("没有可消耗的药水");
                 yield break;
             }
-
+            
             GameObject elixir = _elixirQueue.Dequeue();
 
             // 将药水移动到屏幕底部中央（飞入起点）
@@ -162,87 +165,6 @@ namespace Match3
             //Debug.Log("药水已消耗并销毁");
         }
 
-
-
-        // 药水移动到队列的协程
-        private IEnumerator MoveElixirToQueue(GameObject elixir)
-        {
-            // 计算目标位置（队列中的位置）
-            Vector3 targetPosition = _queueStartPosition +
-                                    Vector3.right * (_elixirSpacing * _elixirQueue.Count);
-
-            float duration = 0.8f;
-            float elapsed = 0f;
-            Vector3 startPos = elixir.transform.position;
-
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
-                elixir.transform.position = Vector3.Lerp(startPos, targetPosition, t);
-                yield return null;
-            }
-
-            // 移动完成后加入队列
-            _elixirQueue.Enqueue(elixir);
-            Debug.Log($"药水加入队列，当前数量: {_elixirQueue.Count}");
-        }
-
-        // 在ExecuteAlchemyEffect中调用此方法
-
-
-        private Vector3 GetEffectCenter(AlchemyMatchResult result)
-        {
-            // 根据效果类型计算中心位置
-            switch (result.MatchedFormula.AlchemyType)
-            {
-                case AlchemyType.BoomClear:
-
-                    return Vector3.zero;
-
-                default:
-                    // 默认取第一个方块位置
-                    return _gameGrid.GetWorldPosition(
-                        result.MatchedPieces[0].X,
-                        result.MatchedPieces[0].Y);
-            }
-        }
-
-
-
-        // 更新队列中剩余药水的位置
-        private void UpdateElixirPositions()
-        {
-            if (_isProcessingElixir) return;
-
-            // 临时列表存储队列中的药水
-            List<GameObject> elixirs = new List<GameObject>(_elixirQueue);
-            _elixirQueue.Clear();
-
-            // 重新计算位置并加入队列
-            for (int i = 0; i < elixirs.Count; i++)
-            {
-                Vector3 targetPos = _queueStartPosition + Vector3.right * (_elixirSpacing * i);
-                StartCoroutine(SmoothMove(elixirs[i], targetPos));
-                _elixirQueue.Enqueue(elixirs[i]);
-            }
-        }
-
-        private IEnumerator SmoothMove(GameObject elixir, Vector3 targetPosition)
-        {
-            float duration = 0.3f;
-            float elapsed = 0f;
-            Vector3 startPos = elixir.transform.position;
-
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                elixir.transform.position = Vector3.Lerp(startPos, targetPosition, elapsed / duration);
-                yield return null;
-            }
-
-            elixir.transform.position = targetPosition;
-        }
 
 
 
@@ -301,7 +223,7 @@ namespace Match3
                 yield break;
             }
 
-            //Debug.Log($"执行炼金效果: {result.MatchedFormula.AlchemyType}");
+            Debug.Log($"执行炼金效果: {result.MatchedFormula.AlchemyType}");
 
             switch (result.MatchedFormula.AlchemyType)
             {
@@ -372,6 +294,8 @@ namespace Match3
             }
             int bounce = 0;
             bounce += (result.MatchLength - 2);
+            _level.movesUsed -= bounce;
+            _hud.SetRemaining(_level.numMoves - _level.movesUsed);
             //LevelNumber _levelNumber=_level as LevelNumber;
             //_levelNumber._movesUsed -= bounce;
             //Debug.Log("_level.numMoves=" + _level.numMoves + "_levelNumber._movesUsed" + _levelNumber._movesUsed);

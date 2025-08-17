@@ -4,6 +4,6 @@
     {
             Herbs,
             Obstacles,
-            Essences
+            Extract
     }
 }
