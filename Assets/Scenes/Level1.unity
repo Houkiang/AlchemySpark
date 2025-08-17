@@ -819,7 +819,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xDim: 6
   yDim: 6
-  fillTime: 0.2
+  fillTime: 0.1
   level: {fileID: 1145417453}
   piecePrefabs:
   - type: 0
@@ -2990,6 +2990,7 @@ MonoBehaviour:
   requiredHerbCounts:
     color: 0
     count: 10
+  currentRequiredHerbCount: 0
 --- !u!1 &1150200999
 GameObject:
   m_ObjectHideFlags: 0
@@ -6431,7 +6432,7 @@ MonoBehaviour:
   gameOver: {fileID: 517597959}
   _gamegrid: {fileID: 425222016}
   remainingText: {fileID: 1128426866}
-  targetText: {fileID: 0}
+  targetText: {fileID: 1589595332}
   targetSubtext: {fileID: 0}
   scoreText: {fileID: 1362469998}
   temp: {fileID: 0}
