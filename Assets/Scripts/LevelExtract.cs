@@ -41,7 +41,11 @@ namespace Match3
         public override void OnMove()
         {
             base.OnMove();
-
+            foreach (var piece in grid.activeExtractCollection)
+            {
+                piece.IncrementExtractMoveCount();
+                //Debug.Log("坐标为"+piece.X+","+piece.Y+"提取物移动次数" + piece.extractMoveCount);
+            }
 
         }
         public override void JudgeWin()

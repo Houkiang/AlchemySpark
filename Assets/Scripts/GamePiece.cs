@@ -5,18 +5,19 @@ namespace Match3
     public class GamePiece : MonoBehaviour
     {
         // 已有字段和方法...
-        public int blueMoveCount { get; private set; }
+        public int extractMoveCount { get; private set; }
+
         public int greenMoveCount { get; private set; }
 
-        public void ResetBlueMoveCount()
+        public void ResetExtractMoveCount()
         {
-            blueMoveCount = 0;
+            extractMoveCount = 0;
+        }
+        public void IncrementExtractMoveCount()
+        {
+            extractMoveCount++;
         }
 
-        public void IncrementBlueMoveCount()
-        {
-            blueMoveCount++;
-        }
 
         public void ResetGreenMoveCount()
         {

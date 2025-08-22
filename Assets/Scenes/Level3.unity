@@ -277,7 +277,7 @@ MonoBehaviour:
   score1Star: 20000
   score2Star: 40000
   score3Star: 80000
-  numMoves: 20
+  numMoves: 50
   movesUsed: 0
   herbToExtractThresholds:
   - color: 0
@@ -1063,6 +1063,7 @@ MonoBehaviour:
   - color: 6
     count: 0
   collectedExtractCounts: []
+  activeExtractCollection: []
   obstacleWidth: 2
   obstacleHeight: 2
 --- !u!4 &425222017
@@ -1386,7 +1387,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &531560577
 RectTransform:
   m_ObjectHideFlags: 0

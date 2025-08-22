@@ -51,6 +51,7 @@ namespace Match3
         [SerializeField] private int minYForPotion = 2;
         public List<ColorClearCount> clearedHerbCounts = new List<ColorClearCount>();
         public List<ColorClearCount> collectedExtractCounts = new List<ColorClearCount>();
+        public List<GamePiece> activeExtractCollection = new List<GamePiece>();
         [SerializeField] private int obstacleWidth = 2;
         [SerializeField] private int obstacleHeight = 2;
 
@@ -74,6 +75,7 @@ namespace Match3
         private GamePiece _enteredPiece;
         private bool _gameOver;
         public bool IsFilling { get; private set; }
+        private bool extractAndSpecialCheck = true;//special与extract为互斥锁避免冲突
 
         private void Awake()
         {
@@ -133,15 +135,15 @@ namespace Match3
             }
 
             _alchemyManager = GetComponent<AlchemyManager>();
-  
-                if (_alchemyManager == null)
-                {
-                    // 尝试在整个场景中查找
-                    _alchemyManager = FindObjectOfType<AlchemyManager>(true);
 
-                    
-                }
-            
+            if (_alchemyManager == null)
+            {
+                // 尝试在整个场景中查找
+                _alchemyManager = FindObjectOfType<AlchemyManager>(true);
+
+
+            }
+
             _alchemyManager.Initialize(this);
         }
 
@@ -335,7 +337,7 @@ namespace Match3
             CheckBottomPotions();
             //Debug.Log("Fill即将进行");
             yield return StartCoroutine(Fill());
-           // Debug.Log("fill未实现");
+            // Debug.Log("fill未实现");
             if (CheckForNormalMatch())
             {
                 _currentState = GameState.NormalClearing;
@@ -344,7 +346,11 @@ namespace Match3
             {
                 _currentState = GameState.AlchemyClearing;
             }
-            else if (CheckBluePotionSwaps() || CheckGreenPotionConversions() || CheckBottomPotions())
+            else if (CheckExtractAction())
+            {
+                _currentState = GameState.Filling;
+            }
+            else if (CheckBottomPotions())
             {
                 _currentState = GameState.Filling;
             }
@@ -377,22 +383,41 @@ namespace Match3
             }
         }
 
-        private bool CheckBluePotionSwaps()
+        private bool CheckExtractAction()
+        {
+            bool hasExtractAction = false;
+            foreach (GamePiece piece in activeExtractCollection)
+            {
+                if ((piece.ColorComponent.Color == ColorType.Blue || piece.ColorComponent.Color == ColorType.Green) && piece.extractMoveCount >= 3)
+                {
+
+                    if (piece.ColorComponent.Color == ColorType.Blue)
+                    {
+                        hasExtractAction = CheckBluePotionSwaps(piece);
+                        piece.ResetExtractMoveCount();
+                    }
+                    if(piece.ColorComponent.Color == ColorType.Green)
+                    {
+                        hasExtractAction = CheckGreenPotionConversions(piece);
+                        piece.ResetExtractMoveCount();
+                    }
+
+
+                }
+            }
+            return hasExtractAction;
+        }
+        private bool CheckBluePotionSwaps(GamePiece piece)
         {
             bool modified = false;
-            for (int y = 0; y < yDim; y++)
-            {
-                for (int x = 0; x < xDim; x++)
-                {
-                    GamePiece piece = _pieces[x, y];
-                    if (piece == null || piece.Type != PieceType.SpecialElement || !piece.IsColored() ||
-                        piece.ColorComponent.Color != ColorType.Blue || piece.blueMoveCount < 2)
-                        continue;
+            int x = piece.X;
+            int y = piece.Y;
 
-                    piece.ResetBlueMoveCount();
-                    if (y == 0 || _pieces[x, y - 1] == null || _pieces[x, y - 1].Type == PieceType.Empty ||
-                        _pieces[x, y - 1].Type.ToString().Contains("impurity"))
-                        continue;
+
+            if (y == 0 || _pieces[x, y - 1] == null || _pieces[x, y - 1].Type == PieceType.Empty ||_pieces[x, y - 1].Type.ToString().Contains("impurity"))
+            {
+                return modified;
+            }
 
                     GamePiece abovePiece = _pieces[x, y - 1];
                     _pieces[x, y] = abovePiece;
@@ -400,47 +425,45 @@ namespace Match3
                     piece.MovableComponent.Move(x, y - 1, fillTime);
                     abovePiece.MovableComponent.Move(x, y, fillTime);
                     modified = true;
-                }
-            }
+                    //执行蓝色精华与上一个交换
             return modified;
         }
 
-        private bool CheckGreenPotionConversions()
+        private bool CheckGreenPotionConversions(GamePiece piece)
         {
             bool modified = false;
-            for (int y = 0; y <= yDim - minYForPotion - 1; y++)
+            int x = piece.X;
+            int y = piece.Y;
+            List<GamePiece> validPieces = new List<GamePiece>();
+            for (int ty = 0; ty <= yDim - minYForPotion - 1; ty++)
             {
-                for (int x = 0; x < xDim; x++)
+                for (int tx = 0; tx < xDim; tx++)
                 {
-                    GamePiece piece = _pieces[x, y];
-                    if (piece == null || piece.Type != PieceType.SpecialElement || !piece.IsColored() ||
-                        piece.ColorComponent.Color != ColorType.Green || piece.greenMoveCount < 3)
-                        continue;
-
-                    piece.ResetGreenMoveCount();
-                    List<GamePiece> validPieces = new List<GamePiece>();
-                    for (int ty = 0; ty <= yDim - minYForPotion - 1; ty++)
+                    if(Math.Abs(tx-x)+Math.Abs(ty-y)<=1) continue;//排除相邻的
+                    GamePiece target = _pieces[tx, ty];
+                    if (target != null && (target.Type == PieceType.Normal || target.Type == PieceType.RowClear ||
+                        target.Type == PieceType.ColumnClear || target.Type == PieceType.SpecialElement || target.Type == PieceType.Rainbow))
                     {
-                        for (int tx = 0; tx < xDim; tx++)
-                        {
-                            GamePiece target = _pieces[tx, ty];
-                            if (target != null && target.Type != PieceType.Empty && target.Type != PieceType.SpecialElement)
-                                validPieces.Add(target);
-                        }
+                        validPieces.Add(target);
                     }
-
-                    if (validPieces.Count == 0) continue;
-
-                    GamePiece targetPiece = validPieces[UnityEngine.Random.Range(0, validPieces.Count)];
-                    int targetX = targetPiece.X;
-                    int targetY = targetPiece.Y;
-                    Destroy(targetPiece.gameObject);
-                    GamePiece newPiece = SpawnNewPiece(targetX, targetY, PieceType.SpecialElement);
-                    if (newPiece.IsColored())
-                        newPiece.ColorComponent.SetColor(ColorType.Green);
-                    modified = true;
                 }
             }
+
+            if (validPieces.Count == 0) return modified;
+
+            GamePiece targetPiece = validPieces[UnityEngine.Random.Range(0, validPieces.Count)];
+            int targetX = targetPiece.X;
+            int targetY = targetPiece.Y;
+            Destroy(targetPiece.gameObject);
+            GamePiece newPiece = SpawnNewPiece(targetX, targetY, PieceType.SpecialElement);
+            if (newPiece.IsColored())
+            {
+                newPiece.ColorComponent.SetColor(ColorType.Green);
+            }
+            activeExtractCollection.Add(newPiece);//加入提取物集合
+            Debug.Log($"绿色精华转换：({piece.X}, {piece.Y}) -> ({targetX}, {targetY})");
+            modified = true;
+
             return modified;
         }
 
@@ -619,8 +642,8 @@ namespace Match3
                     if (match == null) continue;
 
                     PieceType specialPieceType = PieceType.Count;
-                    int specialPieceX = match[0].X;
-                    int specialPieceY = match[0].Y;
+                    int specialPieceX = match[1].X;
+                    int specialPieceY = match[1].Y;//不选择第一个为了防止与Extract的冲突
 
                     // Spawning special pieces
                     if (match.Count == 4)
@@ -643,16 +666,28 @@ namespace Match3
                         specialPieceType = PieceType.Rainbow;
                     }
 
-                    foreach (var gamePiece in match)
+                    for (int i=0;i<match.Count;i++)
                     {
+                        GamePiece gamePiece = match[i];
                         if (ClearPiece(gamePiece.X, gamePiece.Y))
                         {
                             needsRefill = true;
-                            if (gamePiece == _pressedPiece || gamePiece == _enteredPiece)
+                            if (!extractAndSpecialCheck)
                             {
-                                specialPieceX = gamePiece.X;
-                                specialPieceY = gamePiece.Y;
+                                if (i > 0)
+                                {
+                                    specialPieceX = match[i - 1].X;
+                                    specialPieceY = match[i - 1].Y;
+                                    //Debug.Log("special生成受阻，转移至上一个匹配");
+                                }
+                                else
+                                {
+                                    specialPieceX = match[i + 1].X;
+                                    specialPieceY = match[i + 1].Y;
+                                    //Debug.Log("special生成受阻，转移至下一个匹配");
+                                }
                             }
+
                         }
                     }
 
@@ -703,9 +738,10 @@ namespace Match3
         }
 
 
-        private bool CheckAndGenerateSpecialElement(GamePiece piece)
+        private bool CheckAndGenerateExtract(GamePiece piece)
         {
             bool doGenerate = false;
+            extractAndSpecialCheck = true;
             GamePiece firstPiece = piece;
             int specialX = firstPiece.X;
             int specialY = firstPiece.Y;
@@ -738,7 +774,10 @@ namespace Match3
                                 break;
                             }
                         }
+                        newPiece.ResetExtractMoveCount();
+                        activeExtractCollection.Add(newPiece);//加入提取物集合
                         doGenerate = true;
+                        extractAndSpecialCheck = false;
                     }
                     //传入level和hud的参数为修正后的
                     var clearedHerbFixed = clearedHerbCounts.Find(c => c.color == matchColor);
@@ -765,20 +804,21 @@ namespace Match3
                     var requiredHerb = levelExtract.requiredExtractCounts;
                     bool isRequiredColor = requiredHerb.color == color;
 
+                    activeExtractCollection.Remove(piece);//将提取物从集合中移除
 
-                        if (!isRequiredColor)
-                        {
-                            Destroy(piece.gameObject);
-                            GenerateObstacle(x, y);
-                            modified = true;
-                        }
-                        else
-                        {
-                            ClearPiece(x, y);
-                            modified = true;
-                            levelExtract.OnExtractCleared(color);
-                        }
-                   //待补充level统计
+                    if (!isRequiredColor)
+                    {
+                        Destroy(piece.gameObject);
+                        GenerateObstacle(x, y);
+                        modified = true;
+                    }
+                    else
+                    {
+                        ClearPiece(x, y);
+                        modified = true;
+                        levelExtract.OnExtractCleared(color);
+                    }
+
                     
                 }
             }
@@ -1092,18 +1132,21 @@ namespace Match3
 
             GamePiece piece = _pieces[x, y];
             if (piece.Type == PieceType.SpecialElement && piece.IsColored())
+            {
                 IncrementCollectedExtractCount(piece.ColorComponent.Color);
+                activeExtractCollection.Remove(piece);
+            }
             else if (piece.IsColored())
                 IncrementClearedHerbCount(piece.ColorComponent.Color);
                 
             ClearObstacles(x, y);
 
-            bool didSpecialGenerate = false;
+            bool didExtractGenerate = false;
             if (level.LevelType == LevelType.Extract)
             {
-                didSpecialGenerate = CheckAndGenerateSpecialElement(piece);
+                didExtractGenerate = CheckAndGenerateExtract(piece);
             }
-            if (!didSpecialGenerate)
+            if (!didExtractGenerate)
             {
                 piece.ClearableComponent.Clear();
                 SpawnNewPiece(x, y, PieceType.Empty);

@@ -151,50 +151,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aded86531c022ab4d92a14c9059cf1f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numMoves: 18
-  herbClearThresholds:
-  - color: 0
-    count: 999
-  - color: 1
-    count: 12
-  - color: 2
-    count: 10
-  - color: 3
-    count: 99999
-  - color: 4
-    count: 9999
-  - color: 6
-    count: 99999
-  requiredHerbCounts:
-  - color: 2
-    count: 3
-  gameGrid: {fileID: 425222016}
+  grid: {fileID: 0}
   hud: {fileID: 2139536130}
   score1Star: 100000
   score2Star: 200000
   score3Star: 300000
-  scoreTiers:
-  - scoreThreshold: 5000
-    animationClip: {fileID: 0}
-    audioClip: {fileID: 8300000, guid: a46bf193d2e8e524eafea7b77898d5d9, type: 3}
-  - scoreThreshold: 10000
-    animationClip: {fileID: 0}
-    audioClip: {fileID: 8300000, guid: 20fce57a812e1144fabb7be0523b1cb2, type: 3}
-  - scoreThreshold: 20000
-    animationClip: {fileID: 0}
-    audioClip: {fileID: 8300000, guid: 1ab8fff50606ec644a6087e32f009369, type: 3}
-  audioVolume: 1
-  effectSortingLayer: Default
-  effectSortingOrder: 10
-  targetScore: 100000
-  obstaclePieceTypes: 0700000008000000
-  _movesUsed: 0
-  choose: 0
-  baseHerbCountNeed:
-  - color: 4
-    count: 10
-  - color: 1
-    count: 15
+  numMoves: 18
+  movesUsed: 0
 --- !u!4 &69425955
 Transform:
   m_ObjectHideFlags: 0
@@ -1198,7 +1161,7 @@ MonoBehaviour:
   specialBackgrounds: []
   specialBackgroundPrefab: {fileID: 3340003966345329086, guid: 9a9578e2501cc9d478da85d576ffff9c,
     type: 3}
-  minY: 2
+  minYForPotion: 2
   clearedHerbCounts:
   - color: 1
     count: 0
@@ -1212,19 +1175,7 @@ MonoBehaviour:
     count: 0
   - color: 6
     count: 0
-  collectedHerbCounts:
-  - color: 0
-    count: 0
-  - color: 1
-    count: 0
-  - color: 2
-    count: 0
-  - color: 3
-    count: 0
-  - color: 4
-    count: 0
-  - color: 6
-    count: 0
+  collectedExtractCounts: []
   obstacleWidth: 2
   obstacleHeight: 2
 --- !u!4 &425222017
@@ -7082,20 +7033,16 @@ MonoBehaviour:
   level: {fileID: 69425952}
   gameOver: {fileID: 517597959}
   _gamegrid: {fileID: 425222016}
+  targetExtractText: {fileID: 0}
   remainingText: {fileID: 1128426866}
   targetText: {fileID: 1083571274}
   targetSubtext: {fileID: 1861147754}
   scoreText: {fileID: 1362469998}
-  temp: {fileID: 1880804939}
+  extractToNext: []
   stars:
   - {fileID: 1522114774}
   - {fileID: 1396524644}
   - {fileID: 2039921676}
-  herb:
-  - {fileID: 1083571274}
-  potion:
-  - {fileID: 1083571274}
-  herbToNext: {fileID: 1589595332}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
