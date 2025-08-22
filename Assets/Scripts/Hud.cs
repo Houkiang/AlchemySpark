@@ -23,6 +23,7 @@ namespace Match3
         public Text targetExtractText;//for extract level
         public Text remainingText;//moves
         public Text targetText;//for herb level
+        public Text targetObstaclesText;//for obstacle level
         public Text targetSubtext;
         public Text scoreText;
 
@@ -92,7 +93,7 @@ namespace Match3
 
         public void SetTargetExtract(int target) => targetExtractText.text = target.ToString();
 
-
+        public void SetTargetObstacles(int target) => targetObstaclesText.text = target.ToString();
 
         // public void SetRemainingherb(List<ColorClearCount> remain)
         // {

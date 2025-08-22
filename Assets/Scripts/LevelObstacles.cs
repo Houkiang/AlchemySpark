@@ -1,55 +1,55 @@
-﻿namespace Match3
+﻿using System.Collections.Generic;
+
+namespace Match3
 {
     public class LevelObstacles : Level
     {
-        // public PieceType[] obstacleTypes;
+        public List<GamePiece> obstacleTargets = new List<GamePiece>();
+        public override void Awake()
+        {
+            base.Awake();
+            type = LevelType.Obstacles;
 
-        // private const int ScorePerPieceCleared = 1000;
+        }
+        public override void Start()
+        {
+            base.Start();
+            foreach (var piecePosition in grid.initialPieces)
+            {
+                GamePiece piece = grid._pieces[piecePosition.x, piecePosition.y];
+                if (piece != null)
+                {
+                    obstacleTargets.Add(piece);
+                }
+            }
+            hud.SetTargetObstacles(obstacleTargets.Count);
+        }
+        public override void OnPieceCleared(GamePiece piece)
+        {
+            base.OnPieceCleared(piece);
+            foreach (var target in obstacleTargets)
+            {
+                if (target.X == piece.X && target.Y == piece.Y)
+                {
+                    obstacleTargets.Remove(target);
+                    hud.SetTargetObstacles(obstacleTargets.Count);
+                    return;
+                }
+            }
+        }
+        public override void JudgeWin()
+        {
+            base.JudgeWin();
+            if (obstacleTargets.Count == 0)
+            {
+                hud.SetScore(currentScore);
+                GameWin();
+            }
+            else if (movesUsed >= numMoves)
+            {
+                GameLose();
+            }
+        }
     
-        // private int _movesUsed = 0;
-        // private int _numObstaclesLeft;
-
-        // private void Start ()
-        // {
-        //     type = LevelType.Obstacle;
-
-        //     for (int i = 0; i < obstacleTypes.Length; i++)
-        //     {
-        //         _numObstaclesLeft += gameGrid.GetPiecesOfType(obstacleTypes[i]).Count * (i+1);
-        //     }
-        //     hud.SetScore(currentScore);
-        //     hud.SetTarget(_numObstaclesLeft);
-        //     hud.SetRemaining(numMoves);
-        // }
-
-        // public override void OnMove()
-        // {
-        //     _movesUsed++;
-
-        //     hud.SetRemaining(numMoves - _movesUsed);
-
-        //     if (numMoves - _movesUsed == 0 && _numObstaclesLeft > 0)
-        //     {
-        //         GameLose();
-        //     }
-        // }
-
-        // public override void OnPieceCleared(GamePiece piece)
-        // {
-        //     base.OnPieceCleared(piece);
-
-        //     for (int i = 0; i < obstacleTypes.Length; i++)
-        //     {
-        //         if (obstacleTypes[i] != piece.Type) continue;
-            
-        //         _numObstaclesLeft--;
-        //         hud.SetTarget(_numObstaclesLeft);
-        //         if (_numObstaclesLeft != 0) continue;
-            
-        //         currentScore += ScorePerPieceCleared * (numMoves - _movesUsed);
-        //         hud.SetScore(currentScore);
-        //         GameWin();
-        //     }
-        // }
     }
 }

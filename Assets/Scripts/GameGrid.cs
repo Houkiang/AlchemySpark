@@ -44,7 +44,7 @@ namespace Match3
         public Level level;
         [SerializeField] private PiecePrefab[] piecePrefabs;
         [SerializeField] private GameObject backgroundPrefab;
-        [SerializeField] private PiecePosition[] initialPieces;
+        [SerializeField] public PiecePosition[] initialPieces;
         [SerializeField] private SpecialBackground[] specialBackgrounds;
         [SerializeField] private GameObject specialBackgroundPrefab;
 
@@ -1182,7 +1182,12 @@ namespace Match3
                 else if (impurityDowngrade.ContainsKey(piece.Type))
                 {
                     piece.ClearableComponent.Clear();
-                    level.OnPieceCleared(piece);
+                    if(piece.Type == PieceType.impurity1 )
+                    {
+                        level.OnPieceCleared(piece);
+                    }
+
+                    
                     SpawnNewPiece(adjacentX, y, impurityDowngrade[piece.Type]);
                 }
             }
@@ -1202,7 +1207,11 @@ namespace Match3
                 else if (impurityDowngrade.ContainsKey(piece.Type))
                 {
                     piece.ClearableComponent.Clear();
-                    level.OnPieceCleared(piece);
+                    if(piece.Type == PieceType.impurity1 )
+                    {
+                        level.OnPieceCleared(piece);
+                    }
+
                     SpawnNewPiece(x, adjacentY, impurityDowngrade[piece.Type]);
                 }
             }

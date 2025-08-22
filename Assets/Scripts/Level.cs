@@ -60,7 +60,7 @@ namespace Match3
             hud.SetRemaining(numMoves);
         }
 
-        public void Start()
+        public virtual  void Start()
         {
 
         }
