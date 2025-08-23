@@ -853,7 +853,7 @@ MonoBehaviour:
   specialBackgrounds: []
   specialBackgroundPrefab: {fileID: 3340003966345329086, guid: 9a9578e2501cc9d478da85d576ffff9c,
     type: 3}
-  minY: 2
+  minYForPotion: 2
   clearedHerbCounts:
   - color: 0
     count: 0
@@ -865,17 +865,8 @@ MonoBehaviour:
     count: 0
   - color: 4
     count: 0
-  collectedHerbCounts:
-  - color: 0
-    count: 0
-  - color: 1
-    count: 0
-  - color: 2
-    count: 0
-  - color: 3
-    count: 0
-  - color: 4
-    count: 0
+  collectedExtractCounts: []
+  activeExtractCollection: []
   obstacleWidth: 2
   obstacleHeight: 2
 --- !u!4 &425222017
@@ -2546,7 +2537,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5B66\u5F92\u7532\uFF1A\u8FD9\u4E48\u591A\u836F\u8349\u8981\u600E\u4E48\u70BC\u6210\u554A\u3002\u3002\u3002\u6211\u4E0D\u60F3\u5E72\u4E86\r\n\u827E\u8DEF\u6BDB\uFF1A\u70BC\u91D1\u5E08\u53EF\u4E0D\u80FD\u4E34\u9635\u8131\u9003\u554A\uFF0C\u4F60\u8981\u7EC6\u6570\u540C\u8272\u836F\u8349\uFF0C\u4E09\u4E2A\u4EE5\u4E0A\u8FDE\u6210\u4E00\u5757\u5C31\u80FD\u6D88\u9664\u4E86\r\n\u5B66\u5F92\u7532\uFF1A\u4F60\u662F\u3002\u3002\uFF1F\r\n\u827E\u8DEF\u6BDB\uFF1A\u6211\u53EA\u662F\u4E00\u4E2A\u8DEF\u8FC7\u7684\u70BC\u91D1\u672F\u58EB\u7F62\u4E86\r\n"
+  m_Text: "\u5B66\u5F92\u7532\uFF1A\u8FD9\u4E48\u591A\u836F\u8349\u8981\u600E\u4E48\u70BC\u6210\u554A\u3002\u3002\u3002\u6211\u4E0D\u60F3\u5E72\u4E86\r\n\u827E\u8DEF\u6BDB\uFF1A\u70BC\u91D1\u5E08\u53EF\u4E0D\u80FD\u4E34\u9635\u8131\u9003\u554A\uFF0C\u4F60\u8981\u7EC6\u6570\u540C\u8272\u836F\u8349\uFF0C\u4E09\u4E2A\u4EE5\u4E0A\u8FDE\u6210\u4E00\u5757\u5C31\u80FD\u6D88\u9664\u4E86\r\n\u5B66\u5F92\u7532\uFF1A\u4F60\u662F\u3002\u3002\uFF1F\r\n\u827E\u8DEF\u6BDB\uFF1A\u6211\u53EA\u662F\u4E00\u4E2A\u8DEF\u8FC7\u7684\u70BC\u91D1\u672F\u58EB\u7F62\u4E86\r\n\uFF08\u5173\u95ED\u540E\u6309H\u952E\u53EF\u518D\u6B21\u9605\u8BFB\uFF09\n"
 --- !u!222 &925704273
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2987,6 +2978,7 @@ MonoBehaviour:
   score2Star: 20000
   score3Star: 30000
   numMoves: 10
+  movesUsed: 0
   requiredHerbCounts:
     color: 0
     count: 10
@@ -4789,7 +4781,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &1638913324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5134,6 +5126,7 @@ MonoBehaviour:
   menuKeys: 1
   bgmSound: {fileID: 1780855507}
   InformKeys: 0
+  gameGrid: {fileID: 425222016}
 --- !u!82 &1780855507
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6431,20 +6424,17 @@ MonoBehaviour:
   level: {fileID: 1145417453}
   gameOver: {fileID: 517597959}
   _gamegrid: {fileID: 425222016}
+  targetExtractText: {fileID: 0}
   remainingText: {fileID: 1128426866}
   targetText: {fileID: 1589595332}
+  targetObstaclesText: {fileID: 0}
   targetSubtext: {fileID: 0}
   scoreText: {fileID: 1362469998}
-  temp: {fileID: 0}
+  extractToNext: []
   stars:
   - {fileID: 1522114774}
   - {fileID: 1396524644}
   - {fileID: 2039921676}
-  herb:
-  - {fileID: 574570713}
-  potion:
-  - {fileID: 574570713}
-  herbToNext: {fileID: 574570713}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

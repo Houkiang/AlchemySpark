@@ -46,7 +46,7 @@ namespace Match3
         {
             for (int i = 0; i < stars.Length; i++)
             {
-                stars[i].enabled = i == _starIndex;
+                stars[i].enabled = false;
             }
         }
 

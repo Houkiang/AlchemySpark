@@ -13,17 +13,21 @@ namespace Match3
         [SerializeField] private AudioSource bgmSound; //背景音乐暂停
         [SerializeField] private bool InformKeys = false;
 
+        public GameGrid gameGrid;
         // Start is called before the first frame update
+
         // Update is called once per frame
         void Update()
         {
+
             if (menuKeys)
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     menuList.SetActive(true);
                     menuKeys = false;
-                    Time.timeScale = 0;//pause
+
+
                     bgmSound.Pause();    //sound pause
                 }
             }
@@ -31,7 +35,8 @@ namespace Match3
             {
                 menuList.SetActive(false);
                 menuKeys = true;
-                Time.timeScale = 1;//restart
+
+
                 bgmSound.Play();
             }
             if (InformKeys)
@@ -40,7 +45,8 @@ namespace Match3
                 {
                     inform.SetActive(true);
                     InformKeys = false;
-                    Time.timeScale = 0;//pause
+
+
 
                 }
             }
@@ -48,9 +54,22 @@ namespace Match3
             {
                 inform.SetActive(false);
                 InformKeys = true;
-                Time.timeScale = 1;//restart
+
 
             }
+            if (gameGrid != null)
+            {
+                Debug.Log($"Inform Active: {inform.activeSelf}, Menu Active: {menuList.activeSelf}");
+                if (inform.activeSelf == false && menuList.activeSelf == false)
+                {
+                    gameGrid.ResumeGame();
+                }
+                else
+                {
+                    gameGrid.PauseGame();
+                }
+            }
+
         }
         public void Return()//返回游戏
         {
@@ -72,7 +91,20 @@ namespace Match3
         }
         public void Exit()//退出游戏
         {
-            SceneManager.LoadScene(1);
+            if(SceneManager.GetActiveScene().buildIndex==1)
+            {
+                // 在打包的应用中退出游戏
+                Application.Quit();
+        
+                // 在Unity编辑器中停止播放模式
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+                #endif
+            }
+            else
+            {
+                SceneManager.LoadScene(1);
+            }
             Time.timeScale = 1;
         }
 

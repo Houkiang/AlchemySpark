@@ -10,11 +10,14 @@ namespace Match3
             public GameObject gameObject;
             public string playerPrefKey;
         };
+        public GameObject storyInformation;
+        private static bool canShowStory = true;
 
         public ButtonPlayerPrefs[] buttons;
 
         private void Start()
         {
+            storyInformation.SetActive(canShowStory);
             for (int i = 0; i < buttons.Length; i++)
             {
                 int score = PlayerPrefs.GetInt(buttons[i].playerPrefKey, 0);
@@ -22,9 +25,10 @@ namespace Match3
                 for (int starIndex = 1; starIndex <= 3; starIndex++)
                 {
                     Transform star = buttons[i].gameObject.transform.Find($"star{starIndex}");
-                    star.gameObject.SetActive(starIndex <= score);                
+                    star.gameObject.SetActive(starIndex <= score);
                 }
             }
+            canShowStory = false;
         }
 
         public void OnButtonPress(string levelName)

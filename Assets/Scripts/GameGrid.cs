@@ -76,7 +76,23 @@ namespace Match3
         private bool _gameOver;
         public bool IsFilling { get; private set; }
         private bool extractAndSpecialCheck = true;//special与extract为互斥锁避免冲突
+        private bool whiteObstacleAndSpecialCheck=true;//special与white obstacle为互斥锁避免冲突
 
+
+        private bool isPaused = true;
+        // 暂停游戏
+        public void PauseGame()
+        {
+            isPaused = true;
+            Time.timeScale = 0;
+        }
+
+        // 恢复游戏
+        public void ResumeGame()
+        {
+            isPaused = false;
+            Time.timeScale = 1;
+        }
         private void Awake()
         {
             //InitializeClearedHerbCounts();
@@ -201,15 +217,20 @@ namespace Match3
 
         private IEnumerator GameLoop()
         {
+
             _currentState = GameState.Filling;
             while (!_gameOver)
             {
+            while (isPaused)
+            {
+                yield return null;
+            }
                 switch (_currentState)
                 {
                     case GameState.PlayerInput:
-                        
+
                         yield return HandlePlaerInputState();
-                        
+
                         break;
                     case GameState.Swapping:
                         yield return HandleSwappingState();
@@ -219,7 +240,7 @@ namespace Match3
                         break;
                     case GameState.AlchemyClearing:
                         yield return HandleAlchemyClearingState();
-                      
+
                         break;
                     case GameState.Filling:
                         yield return HandleFillingState();
@@ -386,7 +407,7 @@ namespace Match3
         private bool CheckExtractAction()
         {
             bool hasExtractAction = false;
-            foreach (GamePiece piece in activeExtractCollection)
+            foreach (GamePiece piece in activeExtractCollection.ToList())
             {
                 if ((piece.ColorComponent.Color == ColorType.Blue || piece.ColorComponent.Color == ColorType.Green) && piece.extractMoveCount >= 3)
                 {
@@ -470,6 +491,7 @@ namespace Match3
         private bool GenerateWhitePotionObstacles(int x, int y)
         {
             bool modified = false;
+            whiteObstacleAndSpecialCheck = false;
             int[] dx = { 0, 1, 0, -1 };
             int[] dy = { -1, 0, 1, 0 };
             for (int i = 0; i < 4; i++)
@@ -650,7 +672,7 @@ namespace Match3
                     {
                         if (_pressedPiece == null || _enteredPiece == null)
                         {
-                            specialPieceType = (PieceType)UnityEngine.Random.Range((int)PieceType.RowClear, (int)PieceType.ColumnClear+1);
+                            specialPieceType = (PieceType)UnityEngine.Random.Range((int)PieceType.RowClear, (int)PieceType.ColumnClear + 1);
                         }
                         else if (_pressedPiece.Y == _enteredPiece.Y)
                         {
@@ -665,8 +687,8 @@ namespace Match3
                     {
                         specialPieceType = PieceType.Rainbow;
                     }
-
-                    for (int i=0;i<match.Count;i++)
+                    //Debug.Log($"specialPieceX: {specialPieceX}, specialPieceY: {specialPieceY}");
+                    for (int i = 0; i < match.Count; i++)
                     {
                         GamePiece gamePiece = match[i];
                         if (ClearPiece(gamePiece.X, gamePiece.Y))
@@ -678,12 +700,14 @@ namespace Match3
                                 {
                                     specialPieceX = match[i - 1].X;
                                     specialPieceY = match[i - 1].Y;
+                                    //Debug.Log($"specialPieceXDecreaseTo: {specialPieceX}, specialPieceYDecreaseTo: {specialPieceY}");
                                     //Debug.Log("special生成受阻，转移至上一个匹配");
                                 }
                                 else
                                 {
                                     specialPieceX = match[i + 1].X;
                                     specialPieceY = match[i + 1].Y;
+                                    //Debug.Log($"specialPieceXIncreaseTo: {specialPieceX}, specialPieceYIncreaseTo: {specialPieceY}");
                                     //Debug.Log("special生成受阻，转移至下一个匹配");
                                 }
                             }
@@ -691,7 +715,7 @@ namespace Match3
                         }
                     }
 
-                    if (specialPieceType != PieceType.Count)
+                    if (specialPieceType != PieceType.Count && whiteObstacleAndSpecialCheck)
                     {
                         Destroy(_pieces[specialPieceX, specialPieceY]);
                         GamePiece newPiece = SpawnNewPiece(specialPieceX, specialPieceY, specialPieceType);
@@ -705,6 +729,7 @@ namespace Match3
                             newPiece.ColorComponent.SetColor(ColorType.Any);
                         }
                     }
+                    whiteObstacleAndSpecialCheck = true;
 
                     
 
@@ -756,6 +781,8 @@ namespace Match3
                     var clearedHerb = clearedHerbCounts.Find(c => c.color == matchColor);
                     if (clearedHerb.count >= herbThreshold.count)
                     {
+                        extractAndSpecialCheck = false;
+
                         Destroy(_pieces[specialX, specialY].gameObject);
                         GamePiece newPiece = SpawnNewPiece(specialX, specialY, PieceType.SpecialElement);
                         if (newPiece.IsColored())
@@ -777,7 +804,7 @@ namespace Match3
                         newPiece.ResetExtractMoveCount();
                         activeExtractCollection.Add(newPiece);//加入提取物集合
                         doGenerate = true;
-                        extractAndSpecialCheck = false;
+                        
                     }
                     //传入level和hud的参数为修正后的
                     var clearedHerbFixed = clearedHerbCounts.Find(c => c.color == matchColor);

@@ -771,7 +771,7 @@ MonoBehaviour:
       AlchemyType: 2
   specialBackgroundPrefab: {fileID: 3340003966345329086, guid: 9a9578e2501cc9d478da85d576ffff9c,
     type: 3}
-  minY: 2
+  minYForPotion: 2
   clearedHerbCounts:
   - color: 1
     count: 0
@@ -786,6 +786,7 @@ MonoBehaviour:
   - color: 6
     count: 0
   collectedExtractCounts: []
+  activeExtractCollection: []
   obstacleWidth: 2
   obstacleHeight: 2
 --- !u!4 &425222017
@@ -2266,8 +2267,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 29, y: 65.928}
-  m_SizeDelta: {x: 1881.3, y: 819.49}
+  m_AnchoredPosition: {x: 29, y: 24.355}
+  m_SizeDelta: {x: 1881.3, y: 923.38}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &925704272
 MonoBehaviour:
@@ -2302,9 +2303,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u54C8\u54C8\u54C8\u54C8\u2014\u2014\u6309\u7167\u70BC\u91D1\u516C\u5F0F\u70BC\u836F\u2014\u2014\u54C8\u54C8\u54C8\uFF0C\u53EF\u4EE5\u5408\u6210\u70BC\u91D1\u836F\u6C34\uFF0C\u2014\u2014\u54C8\u54C8\u54C8\u54C8\u54C8\u6709\u5404\u79CD\u6548\u679C\u54C8\u54C8\u2014\u2014\u6211\u5DF2\u7ECF\u8BB0\u5230\u7B14\u8BB0\u91CC\u4E86\u54C8\u54C8\u54C8\r\n\u7206\u70B8:
+  m_Text: "\u54C8\u54C8\u54C8\u54C8\u2014\u2014\u5728\u9B54\u6CD5\u9635\u91CC\u6309\u70BC\u91D1\u516C\u5F0F\u7EC4\u6210\u884C\u6216\u5217\u2014\u2014\u54C8\u54C8\u54C8\u53EF\u4EE5\u5408\u6210\u70BC\u91D1\u836F\u6C34\u2014\u2014\u54C8\u54C8\u54C8\u54C8\u54C8\u6709\u5404\u79CD\u6548\u679C\u54C8\u54C8\u2014\u2014\u6211\u5DF2\u7ECF\u8BB0\u5230\u7B14\u8BB0\u91CC\u4E86\u54C8\u54C8\u54C8\r\n\u7206\u70B8:
     \u9EC4\u836F\u8349\u4E24\u4E2A\uFF0C\u84DD\u836F\u8349\u4E00\u4E2A\n\u56DE\u590D\u6B65\u6570\uFF1A\r\u7EFF\u836F\u8349\u4E24\u4E2A\uFF0C\u7EA2\u836F\u8349\u4E00\u4E2A\n                      
-    \u2014\u2014\u6708\u795E\u591C\uFF08\u5854\u838E\u72C2\u7B11\u672F\u8C41\u514D\u5931\u8D25\uFF09\r\n"
+    \u2014\u2014\u6708\u795E\u591C\uFF08\u5854\u838E\u72C2\u7B11\u672F\u8C41\u514D\u5931\u8D25\uFF09\r\n                     
+    \uFF08\u5173\u95ED\u540E\u6309H\u952E\u53EF\u518D\u6B21\u9605\u8BFB\uFF09\n"
 --- !u!222 &925704273
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4236,8 +4238,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuList, Assembly-CSharp
+      - m_Target: {fileID: 1780855506}
+        m_TargetAssemblyTypeName: Match3.MenuList, Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
@@ -4247,7 +4249,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &1638913324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4732,6 +4734,7 @@ MonoBehaviour:
   menuKeys: 1
   bgmSound: {fileID: 1780855507}
   InformKeys: 0
+  gameGrid: {fileID: 425222016}
 --- !u!82 &1780855507
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6027,20 +6030,17 @@ MonoBehaviour:
   level: {fileID: 69425956}
   gameOver: {fileID: 517597959}
   _gamegrid: {fileID: 425222016}
+  targetExtractText: {fileID: 0}
   remainingText: {fileID: 1128426866}
   targetText: {fileID: 1589595332}
+  targetObstaclesText: {fileID: 0}
   targetSubtext: {fileID: 0}
   scoreText: {fileID: 1362469998}
-  temp: {fileID: 1880804939}
+  extractToNext: []
   stars:
   - {fileID: 1522114774}
   - {fileID: 1396524644}
   - {fileID: 2039921676}
-  herb:
-  - {fileID: 0}
-  potion:
-  - {fileID: 0}
-  herbToNext: {fileID: 1589595332}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

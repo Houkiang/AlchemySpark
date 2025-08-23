@@ -57,7 +57,7 @@ namespace Match3
 
         private IEnumerator ShowWinCoroutine(int starCount)
         {
-            //Debug.Log($"Star Count: {starCount}");
+
             yield return new WaitForSeconds(0.5f);
 
 
